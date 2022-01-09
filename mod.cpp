@@ -29,7 +29,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "maiken/module/init.hpp"
-#include "kul/string.hpp"
+#include "mkn/kul/string.hpp"
 
 #include <hwloc.h>
 #include <iostream>
@@ -70,11 +70,11 @@ class hwlocModule : public maiken::Module {
 
     hwloc_topology_destroy(topo);
   }
-  void init(maiken::Application& a, const YAML::Node& node)
+  void init(maiken::Application& a, YAML::Node const& node)
       KTHROW(std::exception) override {
   }
 
-  void compile(maiken::Application& a, const YAML::Node& node) KTHROW(std::exception) override {
+  void compile(maiken::Application& a, YAML::Node const& node) KTHROW(std::exception) override {
     try {
       hwloc_obj_t obj;
       std::unordered_map<uint16_t, Cache> caches;
@@ -108,7 +108,7 @@ class hwlocModule : public maiken::Module {
         ss << "_MKN_OMPI_HWLOC_L" << i << "_CL_SIZE_=" << caches[i].line_size;
         a.add_def(ss.str());
       }
-    } catch (const kul::Exception& e) {
+    } catch (const mkn::kul::Exception& e) {
       KERR << e.stack();
     } catch (const std::exception& e) {
       KERR << e.what();
