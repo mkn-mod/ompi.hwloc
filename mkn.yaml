@@ -9,23 +9,20 @@ property:
 parent: base
 src: mod.cpp
 mode: shared
-if_arg:
-    win_shared: -DYAML_CPP_DLL
-    shared: -DKUL_SHARED
+arg: -DKUL_SHARED
 
 profile:
-  - name: base
-    dep:
-      - name: mkn
-        profile: mod
-        local: ${maiken_location}
-        scm: ${maiken_scm}
-      - name: ompi.hwloc
-        scm: ${ompi.hwloc.scm}
-        local: ${MKN_REPO}/ompi/hwloc/${version}
+- name: base
+  dep:
+    - name: mkn
+      profile: mod
+      local: ${maiken_location}
+      scm: ${maiken_scm}
+    - name: ompi.hwloc
+      scm: ${ompi.hwloc.scm}
+      local: ${MKN_REPO}/ompi/hwloc/${version}
 
-  - name: test
-    parent: base
-    main: test.cpp
-    if_arg:
-      win_shared: -DYAML_CPP_DLL
+- name: test
+  parent: base
+  main: test.cpp
+  dep: mkn&${maiken_location}(${maiken_scm})[lib]
