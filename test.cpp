@@ -1,32 +1,21 @@
+#if defined(MKN_OMPI_HWLOC_TEST_HEADER)
+#if defined(_MKN_OMPI_HWLOC_L1_SIZE_)
+#error "ompi.hwloc header mode should not add compile flags"
+#endif
+#include "mkn/ompi/hwloc.hpp"
+#endif
 
+#include <cstdio>
 
-#include "mkn/kul/signal.hpp"
-#include "mkn/kul/yaml.hpp"
-#include <maiken.hpp>
+#if !defined(_MKN_OMPI_HWLOC_L1_SIZE_) || !defined(_MKN_OMPI_HWLOC_L1_CL_SIZE_) || \
+    !defined(_MKN_OMPI_HWLOC_L2_SIZE_) || !defined(_MKN_OMPI_HWLOC_L2_CL_SIZE_) || \
+    !defined(_MKN_OMPI_HWLOC_L3_SIZE_) || !defined(_MKN_OMPI_HWLOC_L3_CL_SIZE_)
+#error "ompi.hwloc module defines missing"
+#endif
 
-const std::string yArgs = "";
-
-int main(int argc, char* argv[]) {
-  mkn::kul::Signal sig;
-  try {
-    YAML::Node node = mkn::kul::yaml::String(yArgs).root();
-    char* argv2[2] = {argv[0], (char*)"-O"};
-    auto app = (maiken::Application::CREATE(2, argv2))[0];
-    auto loader(maiken::ModuleLoader::LOAD(*app));
-    loader->module()->init(*app, node);
-    loader->module()->compile(*app, node);
-    loader->module()->link(*app, node);
-    loader->module()->pack(*app, node);
-    loader->unload();
-  } catch (const mkn::kul::Exception& e) {
-    KLOG(ERR) << e.what();
-    return 2;
-  } catch (const std::exception& e) {
-    KERR << e.what();
-    return 3;
-  } catch (...) {
-    KERR << "UNKNOWN EXCEPTION TYPE CAUGHT";
-    return 5;
-  }
+int main() {
+  std::printf("L1 %llu/%llu\n", 1ull * _MKN_OMPI_HWLOC_L1_SIZE_, 1ull * _MKN_OMPI_HWLOC_L1_CL_SIZE_);
+  std::printf("L2 %llu/%llu\n", 1ull * _MKN_OMPI_HWLOC_L2_SIZE_, 1ull * _MKN_OMPI_HWLOC_L2_CL_SIZE_);
+  std::printf("L3 %llu/%llu\n", 1ull * _MKN_OMPI_HWLOC_L3_SIZE_, 1ull * _MKN_OMPI_HWLOC_L3_CL_SIZE_);
   return 0;
 }
