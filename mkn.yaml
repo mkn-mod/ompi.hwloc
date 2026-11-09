@@ -2,27 +2,33 @@
 name: ompi.hwloc
 version: master
 property:
-    maiken_location: ${MKN_HOME}/app/mkn/${version}
-    maiken_scm: https://github.com/mkn/mkn
     ompi.hwloc.scm: https://github.com/mkn-nix/ompi.hwloc
 
 parent: base
 src: mod.cpp
 mode: shared
-arg: -DKUL_SHARED
 
 profile:
 - name: base
   dep:
-    - name: mkn
-      profile: mod
-      local: ${maiken_location}
-      scm: ${maiken_scm}
+    - name: mkn.mod
     - name: ompi.hwloc
       scm: ${ompi.hwloc.scm}
       local: ${MKN_REPO}/ompi/hwloc/${version}
+  if_arg:
+      win_shared: -DYAML_CPP_DLL
+      shared: -DMKN_KUL_SHARED
 
 - name: test
-  parent: base
+  mod: ompi.hwloc
   main: test.cpp
-  dep: mkn&${maiken_location}(${maiken_scm})[lib]
+
+- name: test_header
+  mod: |
+    ompi.hwloc{compile{header: mkn/ompi/hwloc.hpp}}
+  main: test.cpp
+  arg: -DMKN_OMPI_HWLOC_TEST_HEADER
+
+- name: format
+  mod: |
+    clang.format{init{style: google, paths: .}}

@@ -13,10 +13,10 @@ size is in bytes by default
     -D_MKN_OMPI_HWLOC_L2_CL_SIZE_=$SIZE  # CPU L2 cache line size - 0 if not exists
     -D_MKN_OMPI_HWLOC_L3_CL_SIZE_=$SIZE  # CPU L3 cache line size - 0 if not exists
 
-Compile/Link phase module
+Compile phase module
 
 ## Prerequisites
-  [maiken](https://github.com/Dekken/maiken)
+  [maiken](https://github.com/mkn/mkn)
 
 ## Usage
 
@@ -25,25 +25,26 @@ mod:
 - name: ompi.hwloc
 ```
 
+The defines are added as compile flags by default. To write them to a header instead:
+
+```yaml
+mod: |
+  ompi.hwloc{compile{header: mkn/ompi/hwloc.hpp}}
+```
+
+```cpp
+#include "mkn/ompi/hwloc.hpp"
+```
+
+A relative `header` path is created under the project build directory, which is added as a private
+include path. An absolute path has its parent directory added instead. The header is only rewritten
+when its contents change.
+
 ## Building
 
-  Windows cl:
-
-    UNSUPPORTED
-
-
-  *nix gcc:
-
-    mkn clean build -tSa "-O2 -fPIC" -d -l "-pthread -ldl"
-
+    mkn clean build -dtOa "-std=c++20 -fPIC"
 
 ## Testing
 
-  Windows cl:
-
-    UNSUPPORTED
-
-  *nix gcc:
-
-    mkn clean build -tSa "-O2 -fPIC" -dp test -l "-pthread -ldl" run
-
+    mkn clean build run -dtOp test -a "-std=c++20 -fPIC"
+    mkn clean build run -dtOp test_header -a "-std=c++20 -fPIC"
