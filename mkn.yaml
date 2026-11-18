@@ -16,7 +16,6 @@ profile:
       scm: ${ompi.hwloc.scm}
       local: ${MKN_REPO}/ompi/hwloc/${version}
   if_arg:
-      win_shared: -DYAML_CPP_DLL
       shared: -DMKN_KUL_SHARED
 
 - name: test
