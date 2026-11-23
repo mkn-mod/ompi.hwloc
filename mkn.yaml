@@ -3,6 +3,7 @@ name: ompi.hwloc
 version: master
 property:
     ompi.hwloc.scm: https://github.com/mkn-nix/ompi.hwloc
+    mkn.mod.version: master
 
 parent: base
 src: mod.cpp
@@ -12,6 +13,7 @@ profile:
 - name: base
   dep:
     - name: mkn.mod
+      version: ${mkn.mod.version}
     - name: ompi.hwloc
       scm: ${ompi.hwloc.scm}
       local: ${MKN_REPO}/ompi/hwloc/${version}
@@ -30,4 +32,4 @@ profile:
 
 - name: format
   mod: |
-    clang.format{init{style: google, paths: .}}
+    clang.format#master{init{style: google, paths: .}}
