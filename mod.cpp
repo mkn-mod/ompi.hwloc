@@ -29,9 +29,9 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "mkn/mod/init.hpp"  // IWYU pragma: keep
+#include "mkn/kul/bon.hpp"
 
 #include "mkn/kul/log.hpp"
-#include "mkn/kul/yaml.hpp"
 
 #include <hwloc.h>
 
@@ -80,14 +80,13 @@ class hwlocModule : public mkn::mod::Module {
   }
   ~hwlocModule() { hwloc_topology_destroy(topo); }
 
-  void compile(mkn::mod::Context& ctx, YAML::Node const& node) override {
+  void compile(mkn::mod::Context& ctx, mkn::mod::Node const& node) override {
     try {
-      using namespace mkn::kul::yaml;
-      if (node) Validator({NodeValidator("header")}).validate(node);
+      mkn::kul::bon::validate(node, {"header"});
 
       auto const defines = cache_defines();
-      if (node && node["header"])
-        write_header(ctx, node["header"].Scalar(), defines);
+      if (node.find("header"))
+        write_header(ctx, node["header"].str(), defines);
       else
         for (auto const& [name, value] : defines)
           ctx.compilerState().add(
